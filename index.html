@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Proxima — IA generativa en tiempo real</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+@font-face{font-family:'Familjen Grotesk';font-style:normal;font-weight:400;font-display:swap;src:url(assets/f-bc72045555.woff2) format('woff2')}
+@font-face{font-family:'Familjen Grotesk';font-style:normal;font-weight:500;font-display:swap;src:url(assets/f-767aabc985.woff2) format('woff2')}
+@font-face{font-family:'Familjen Grotesk';font-style:normal;font-weight:600;font-display:swap;src:url(assets/f-0f649ab194.woff2) format('woff2')}
+@font-face{font-family:'Familjen Grotesk';font-style:normal;font-weight:700;font-display:swap;src:url(assets/f-e407a3ca30.woff2) format('woff2')}
+@font-face{font-family:'Libre Franklin';font-style:normal;font-weight:400;font-display:swap;src:url(assets/f-99a2074fba.woff2) format('woff2')}
+@font-face{font-family:'Libre Franklin';font-style:normal;font-weight:500;font-display:swap;src:url(assets/f-6f2bf83ab5.woff2) format('woff2')}
+@font-face{font-family:'Libre Franklin';font-style:normal;font-weight:600;font-display:swap;src:url(assets/f-18d95bbd20.woff2) format('woff2')}
+  :root{
+    --papel:#F1EFE9; --superficie:#FAF9F6; --tinta:#10262C; --tinta-suave:#4A6169;
+    --apagado:#7C8B8E; --linea:#DDD9D0; --profundo:#0F4A55; --senal:#E8481F;
+    --marca:'Familjen Grotesk','Helvetica Neue',Arial,sans-serif;
+    --texto:'Libre Franklin','Helvetica Neue',Arial,sans-serif;
+    --gutter:56px;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--papel); color:var(--tinta);
+        font-family:var(--texto); -webkit-font-smoothing:antialiased; }
+  img{ display:block; max-width:100%; }
+  a{ color:var(--profundo); text-decoration:none; }
+  a:hover{ color:var(--tinta); }
+  .page{ max-width:1440px; margin:0 auto; background:var(--papel); }
+  .pad{ padding-left:var(--gutter); padding-right:var(--gutter); }
+
+  .eyebrow{ font-family:var(--marca); font-size:10.5px; font-weight:700;
+            letter-spacing:.16em; text-transform:uppercase; color:var(--apagado); }
+  h1,h2,h3{ font-family:var(--marca); margin:0; }
+  h2.tit{ font-weight:500; font-size:clamp(32px,4vw,54px); line-height:1.05;
+          letter-spacing:-.032em; text-wrap:pretty; }
+  p{ margin:0; text-wrap:pretty; }
+  .lede{ font-size:clamp(16px,1.25vw,17.5px); line-height:1.58; color:var(--tinta-suave); }
+
+  .cover{ position:relative; overflow:hidden; aspect-ratio:1440/810;
+          container-type:inline-size; }
+  .cover img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .burger{ position:absolute; top:5.43%; right:3.89%; width:4.31cqw; height:4.17cqw;
+           min-width:34px; min-height:33px;
+           background:#D6DBDF; display:flex; flex-direction:column; justify-content:center;
+           align-items:center; gap:0.56cqw; }
+  .burger i{ display:block; width:2.08cqw; min-width:17px; height:0.18cqw; min-height:1.6px;
+             background:#1C2733; }
+  .cover .desc{ position:absolute; left:3.89%; top:13.83%; width:25cqw; }
+  .cover .desc .eyebrow{ color:rgba(241,244,246,.6); display:block;
+                         font-size:clamp(9px,.729cqw,10.5px); margin-bottom:.83cqw; }
+  .cover .desc p{ font-size:clamp(12px,1.146cqw,16.5px); line-height:1.55; color:rgba(241,244,246,.93); }
+  .negs{ position:absolute; right:3.89%; top:16.5%; text-align:right;
+         font-size:clamp(12px,1.146cqw,16.5px); line-height:1.6; color:rgba(241,244,246,.93); }
+  .negs .negs-fin{ margin-top:.9cqw; }
+  .cue{ height:90px; border-top:1px solid var(--linea); display:flex; align-items:flex-start;
+        gap:18px; }
+  .cue .rule{ width:1px; height:46px; background:var(--profundo); flex:0 0 auto; }
+  .cue .eyebrow{ padding-top:20px; }
+
+  .cover-movil{ display:none; }
+
+  .prueba{ padding:96px var(--gutter) 104px; display:flex; flex-direction:column; gap:52px; }
+  .fila{ display:flex; gap:64px; align-items:flex-start; }
+  .col-txt{ width:520px; flex:0 0 auto; display:flex; flex-direction:column; gap:20px; }
+  .col-txt .eyebrow{ margin-bottom:-2px; }
+  .ventana{ flex:1 1 auto; display:flex; flex-direction:column; gap:13px; min-width:0; }
+  .marco{ border:1px solid var(--linea); background:var(--superficie); }
+  .marco .hueco{ aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; }
+  .ph{ font-family:var(--marca); font-size:11px; letter-spacing:.13em;
+       text-transform:uppercase; color:var(--apagado); text-align:center; padding:0 12px; }
+  .barra{ display:flex; align-items:center; gap:13px; padding:13px 17px;
+          border-top:1px solid var(--linea); flex-wrap:wrap; }
+  .punto{ width:8px; height:8px; border-radius:50%; background:var(--senal); flex:0 0 auto; }
+  .barra .est{ font-family:var(--marca); font-size:13px; font-weight:600; }
+  .barra .meta{ font-family:var(--marca); font-size:12.5px; color:var(--apagado); }
+  .barra .sep{ width:1px; height:13px; background:var(--linea); }
+  .barra .push{ margin-left:auto; }
+  .nota-chica{ font-size:13.5px; line-height:1.5; color:var(--apagado); }
+
+  .tira{ display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); gap:8px; }
+  .tira .celda{ display:flex; flex-direction:column; gap:9px; }
+  .tira .cuadro{ aspect-ratio:3/4; background:var(--superficie); border:1px solid var(--linea); }
+  .tira .tc{ font-family:var(--marca); font-size:11px; letter-spacing:.04em; color:var(--apagado); }
+  .pie-tira{ display:flex; align-items:baseline; justify-content:space-between; gap:24px;
+             border-top:1px solid var(--linea); padding-top:13px; flex-wrap:wrap; }
+  .pie-tira .afirma{ font-size:16.5px; font-weight:500; }
+  .pie-tira .marca-ph{ font-family:var(--marca); font-size:11px; letter-spacing:.13em;
+                       text-transform:uppercase; color:var(--apagado); }
+
+  .idioma{ padding:92px var(--gutter) 96px; display:flex; flex-direction:column; gap:40px; }
+  .contraste{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+              border-top:1px solid var(--linea); }
+  .contraste > div{ padding:26px 44px 0 0; }
+  .contraste > div + div{ padding:26px 0 0 44px; border-left:1px solid var(--linea); }
+  .contraste .rot{ display:block; margin-bottom:13px; }
+  .contraste p{ font-size:16.5px; line-height:1.58; color:var(--tinta-suave); }
+  .contraste .marcado{ color:var(--tinta); font-weight:500;
+                       font-size:clamp(18px,1.6vw,22px); line-height:1.35;
+                       letter-spacing:-.015em; }
+  .rasgos{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:30px; }
+  .rasgos > div{ border-top:1px solid var(--tinta); padding-top:14px; }
+  .rasgos h3{ font-weight:600; font-size:16px; letter-spacing:-.015em; margin-bottom:7px; }
+  .rasgos p{ font-size:15px; line-height:1.5; color:var(--tinta-suave); }
+  .frase-sola{ font-family:var(--marca); font-weight:500;
+               font-size:clamp(22px,2.2vw,30px); line-height:1.18; letter-spacing:-.024em; }
+  .ej{ font-style:normal; color:var(--tinta); }
+
+  .medir{ padding:96px var(--gutter) 100px; display:flex; flex-direction:column; gap:46px; }
+
+  .banda{ background:var(--tinta); color:#F1F4F6; padding:84px var(--gutter) 88px; }
+  .banda .eyebrow{ color:rgba(241,244,246,.5); display:block; margin-bottom:18px; }
+  .banda h2{ font-weight:500; font-size:clamp(30px,3.6vw,50px); line-height:1.06;
+             letter-spacing:-.03em; margin-bottom:18px; }
+  .banda .sub{ font-size:17px; line-height:1.58; color:rgba(241,244,246,.74); max-width:440px; }
+  .compromisos{ flex:1 1 auto; display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+                gap:34px; padding-top:42px; }
+  .compromisos .tick{ height:2px; width:26px; background:var(--senal); margin-bottom:16px; }
+  .compromisos h3{ font-weight:600; font-size:18px; letter-spacing:-.015em; margin-bottom:9px; }
+  .compromisos p{ font-size:15px; line-height:1.55; color:rgba(241,244,246,.7); }
+
+  .capas{ padding:22px var(--gutter) 100px; display:flex; flex-direction:column; gap:50px; }
+  .cab{ display:flex; gap:64px; align-items:flex-end; }
+  .cab .izq{ width:620px; flex:0 0 auto; }
+  .cab .izq .eyebrow{ display:block; margin-bottom:18px; }
+  .capa{ display:flex; gap:48px; padding:30px 0; border-top:1px solid var(--linea); }
+  .capa:last-of-type{ border-bottom:1px solid var(--linea); }
+  .capa .num{ font-family:var(--marca); font-size:13px; color:var(--apagado);
+              width:40px; flex:0 0 auto; padding-top:5px; }
+  .capa .nom{ width:300px; flex:0 0 auto; font-family:var(--marca); font-weight:600;
+              font-size:22px; letter-spacing:-.02em; }
+  .capa p{ font-size:16.5px; line-height:1.58; color:var(--tinta-suave); max-width:620px; }
+  .remate{ display:flex; gap:64px; align-items:flex-start; padding-top:12px; }
+  .remate .frase{ width:620px; flex:0 0 auto; font-family:var(--marca); font-weight:500;
+                  font-size:clamp(24px,2.4vw,32px); line-height:1.16; letter-spacing:-.024em; }
+  .remate p{ font-size:16.5px; line-height:1.6; color:var(--tinta-suave); max-width:600px; }
+
+  .verticales{ background:var(--superficie); border-top:1px solid var(--linea);
+               border-bottom:1px solid var(--linea); padding:92px var(--gutter) 96px;
+               display:flex; flex-direction:column; gap:46px; }
+  .tres{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:30px; }
+  .tarjeta{ background:var(--papel); padding:34px 30px 36px; display:flex;
+            flex-direction:column; gap:14px; }
+  .tarjeta h3{ font-weight:600; font-size:24px; letter-spacing:-.02em; }
+  .tarjeta p{ font-size:16px; line-height:1.56; color:var(--tinta-suave); }
+  .tarjeta .link{ font-family:var(--marca); font-weight:600; font-size:15px;
+                  margin-top:auto; padding-top:10px; }
+  .chip{ font-family:var(--marca); font-size:9.5px; font-weight:700; letter-spacing:.13em;
+         text-transform:uppercase; color:var(--apagado); }
+  .tarjeta .cab-t{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+
+  .datos{ background:var(--superficie);
+          border-top:1px solid var(--linea); border-bottom:1px solid var(--linea); }
+  .datos{ padding:96px var(--gutter) 100px; display:flex; flex-direction:column; gap:46px; }
+  .cuatro{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:34px; }
+  .cuatro > div{ border-top:1px solid var(--tinta); padding-top:18px; }
+  .cuatro h3{ font-weight:600; font-size:19px; letter-spacing:-.018em; margin-bottom:10px; }
+  .cuatro p{ font-size:15.5px; line-height:1.56; color:var(--tinta-suave); }
+
+  .equipo{ background:var(--superficie); border-top:1px solid var(--linea);
+           padding:92px var(--gutter) 96px; display:flex; flex-direction:column; gap:44px; }
+  .personas{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:30px; }
+  .persona .foto{ aspect-ratio:4/5; background:var(--papel); border:1px solid var(--linea);
+                  display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
+  .persona .nom{ font-family:var(--marca); font-weight:600; font-size:20px; letter-spacing:-.018em; }
+  .persona .rol{ font-size:15.5px; color:var(--apagado); margin-top:4px; }
+  .persona p{ font-size:15.5px; line-height:1.55; color:var(--tinta-suave); margin-top:10px; }
+
+  .bitacora{ padding:92px var(--gutter) 96px; display:flex; flex-direction:column; gap:40px; }
+  .cab-bit{ display:flex; align-items:flex-end; justify-content:space-between; gap:60px; }
+  .cab-bit h2{ font-weight:500; font-size:clamp(28px,3.2vw,44px); line-height:1.08;
+               letter-spacing:-.03em; }
+  .cab-bit .eyebrow{ display:block; margin-bottom:18px; }
+  .entrada{ display:flex; gap:48px; padding:26px 0; border-top:1px solid var(--linea); }
+  .entrada:last-of-type{ border-bottom:1px solid var(--linea); }
+  .entrada .fecha{ font-family:var(--marca); font-size:13px; letter-spacing:.04em;
+                   color:var(--apagado); width:96px; flex:0 0 auto; padding-top:4px; }
+  .entrada .cuerpo{ max-width:760px; }
+  .entrada .tit-e{ font-family:var(--marca); font-weight:600; font-size:20px; letter-spacing:-.018em; }
+  .entrada p{ font-size:16px; line-height:1.5; color:var(--tinta-suave); margin-top:7px; }
+  .entrada .clip{ margin-left:auto; width:200px; height:112px; background:var(--superficie);
+                  border:1px solid var(--linea); flex:0 0 auto; display:flex;
+                  align-items:center; justify-content:center; }
+
+  .cierre{ background:var(--profundo); color:var(--papel);
+           padding:96px var(--gutter) 100px; display:flex; gap:80px; align-items:flex-start; }
+  .cierre .izq{ width:620px; flex:0 0 auto; display:flex; flex-direction:column; gap:20px; }
+  .cierre h2{ font-weight:600; font-size:clamp(28px,3.2vw,42px); line-height:1.1;
+              letter-spacing:-.027em; }
+  .cierre .izq p{ font-size:17px; line-height:1.58; color:#C8D4D6; }
+  .form{ flex:1 1 auto; display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .form .par{ display:flex; gap:12px; }
+  .campo{ flex:1 1 auto; height:52px; border:1px solid #3C6C75; display:flex;
+          align-items:center; padding:0 16px; font-size:15px; color:#A9BDC0; }
+  .boton{ margin-top:8px; align-self:flex-start; display:inline-flex; align-items:center;
+          height:54px; padding:0 32px; background:var(--papel); color:var(--profundo);
+          font-family:var(--marca); font-weight:700; font-size:16px; }
+  .boton:hover{ color:var(--tinta); }
+
+  .pie{ padding:40px var(--gutter) 46px; display:flex; align-items:baseline;
+        justify-content:space-between; gap:40px; flex-wrap:wrap; }
+  .pie .wm{ font-family:var(--marca); font-weight:700; font-size:19px; letter-spacing:-.04em; }
+  .pie .links{ display:flex; gap:28px; font-size:14.5px; color:var(--tinta-suave); flex-wrap:wrap; }
+  .pie .loc{ font-size:13.5px; color:var(--apagado); }
+
+  @media (max-width:1100px){
+    .fila,.cab,.remate,.cierre{ flex-direction:column; gap:36px; align-items:stretch; }
+    .col-txt,.cab .izq,.remate .frase,.cierre .izq{ width:auto; }
+    .compromisos{ padding-top:0; grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .cuatro,.rasgos{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .tira{ grid-template-columns:repeat(4,minmax(0,1fr)); }
+    .contraste{ grid-template-columns:1fr; }
+    .contraste > div{ padding:24px 0 26px; }
+    .contraste > div + div{ padding:24px 0 0; border-left:0;
+                            border-top:1px solid var(--linea); }
+  }
+  @media (max-width:860px){
+    .cover{ display:none; }
+    .cover-movil{ display:block; }
+    .cue{ height:70px; }
+    .cue .rule{ height:34px; }
+    .cue .eyebrow{ padding-top:14px; }
+  }
+  @media (max-width:820px){
+    :root{ --gutter:28px; }
+    .tres,.personas{ grid-template-columns:1fr; }
+    .compromisos,.cuatro,.rasgos{ grid-template-columns:1fr; gap:26px; }
+    .capa{ flex-wrap:wrap; gap:14px 20px; }
+    .capa .nom{ width:auto; flex:1 1 100%; }
+    .capa .num{ width:auto; padding-top:0; }
+    .entrada{ flex-wrap:wrap; gap:10px 20px; }
+    .entrada .fecha{ width:auto; padding-top:0; }
+    .entrada .clip{ margin-left:0; width:100%; }
+    .cab-bit{ flex-direction:column; align-items:flex-start; gap:22px; }
+    .prueba{ padding-top:64px; padding-bottom:72px; gap:40px; }
+    .capas{ padding-top:16px; padding-bottom:68px; gap:36px; }
+    .idioma,.datos,.medir,.banda,.verticales,.equipo,.bitacora,.cierre{
+      padding-top:64px; padding-bottom:68px; }
+    .cue .eyebrow{ padding-top:14px; }
+  }
+  @media (max-width:560px){
+    .tira{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .form .par{ flex-direction:column; }
+  }
+
+  .cover-movil .retrato{ position:relative; height:52vh; min-height:340px; max-height:520px;
+                         overflow:hidden; }
+  .cover-movil .retrato img{ position:absolute; inset:0; width:100%; height:100%;
+                             object-fit:cover; object-position:50% 16%; }
+  .cover-movil .burger{ top:20px; right:20px; width:44px; height:42px; gap:6px; }
+  .cover-movil .burger i{ width:21px; height:2px; }
+  .cover-movil .palabra{ font-family:var(--marca); font-weight:400;
+                         font-size:clamp(64px,26vw,112px); line-height:.86;
+                         letter-spacing:-.05em; color:var(--tinta);
+                         padding:16px var(--gutter) 22px; }
+  .cover-movil .bajo{ padding:0 var(--gutter); display:flex; flex-direction:column; gap:18px; }
+  .cover-movil .bajo p{ font-size:15.5px; line-height:1.5; color:var(--tinta-suave); }
+  .cover-movil .negs-m{ font-size:15.5px; line-height:1.6; color:var(--tinta);
+                        border-top:1px solid var(--linea); padding-top:16px; }
+  .cover-movil .negs-m .cierre-m{ margin-top:12px; font-weight:500; }
+  .cover-movil .cta-m{ display:flex; align-items:center; justify-content:center; height:50px;
+                       background:var(--profundo); color:var(--papel); font-family:var(--marca);
+                       font-weight:600; font-size:15.5px; margin:4px 0 30px; }
+  .cover-movil .cta-m:hover{ color:var(--papel); }
+
+/* ===== portada nueva (25/9) ===== */
+@font-face{font-family:'Arimo';font-style:normal;font-weight:400;font-display:swap;src:url(assets/f-bf8e7a2421.woff2) format('woff2')}
+@font-face{font-family:'Arimo';font-style:normal;font-weight:500;font-display:swap;src:url(assets/f-9670a4d340.woff2) format('woff2')}
+  .portada{
+    --p-bg:url(assets/img-845c87c478.webp); --p-cut:url(assets/img-4153499d29.webp);
+    --p-crema:#E0DDD7; --p-crema-ink:#4C5359; --p-key:#E8481F;
+    --p-sans:"Helvetica Neue",Helvetica,"Arimo",Arial,sans-serif;
+    background:#0E1114;
+  }
+  .portada .stage{container-type:inline-size;position:relative;width:100%;aspect-ratio:16/9;
+    overflow:hidden;font-family:var(--p-sans)}
+  .portada .bg{position:absolute;inset:0;z-index:1;background:var(--p-bg) center/cover no-repeat}
+  .portada .win{position:absolute;z-index:2;left:34.79%;top:16.17%;width:58.40%;height:75.68%;
+    border:.07cqw solid rgba(233,240,246,.30);background:rgba(216,232,244,.055);
+    backdrop-filter:blur(1.5px);-webkit-backdrop-filter:blur(1.5px)}
+  .portada .bar{position:absolute;left:0;right:0;top:0;height:8.97%;background:var(--p-crema);
+    display:flex;align-items:center;gap:1.1cqw;padding:0 1.5cqw;
+    color:var(--p-crema-ink);font-size:clamp(10.5px,1.02cqw,15px);letter-spacing:.005em}
+  .portada .dots{display:flex;gap:.62cqw;align-items:center}
+  .portada .dots i{width:.62cqw;height:.62cqw;border-radius:50%;background:#B9B5AD}
+  .portada .estado{display:flex;align-items:center;gap:.72cqw;white-space:nowrap}
+  .portada .estado em{width:.62cqw;height:.62cqw;border-radius:50%;background:var(--p-key);
+    display:block;font-style:normal;animation:p-late 3.2s steps(1,end) infinite}
+  .portada .reloj{margin-left:auto;white-space:nowrap;font-variant-numeric:tabular-nums;color:#6C7278}
+  .portada .cut{position:absolute;z-index:3;inset:0;width:100%;height:100%;
+    background:var(--p-cut) center/100% 100% no-repeat}
+  .portada .wm{position:absolute;z-index:4;inset:0}
+  .portada .wm span{position:absolute;left:3.60cqw;bottom:4.02cqw;color:#FDFDFC;
+    font-size:25.5cqw;font-weight:400;line-height:1;letter-spacing:-.055em;white-space:nowrap;
+    user-select:none}
+  .portada .wm u{display:inline-block;width:.0815em;height:.0763em;background:currentColor;
+    text-decoration:none;position:relative;top:-.626em;margin-left:-.1515em;margin-right:.070em}
+  .portada .copy{position:absolute;z-index:6;left:5.28cqw;bottom:31.6cqw}
+  .portada .volanta{font-size:clamp(15.5px,1.25cqw,18px);font-weight:500;letter-spacing:.16em;text-transform:uppercase;
+    color:#C4CCD1;margin:0}
+  .portada .bajada{margin:1.25cqw 0 0;font-size:clamp(14.5px,1.18cqw,17px);line-height:1.6;color:#9FAAB1}
+  .portada .bajada .l{display:block;white-space:nowrap}
+  .portada .burger{position:absolute;z-index:7;top:5.43%;right:3.89%;width:4.31cqw;height:4.17cqw;
+    min-width:34px;min-height:33px;background:#D6DBDF;display:flex;flex-direction:column;
+    justify-content:center;align-items:center;gap:.56cqw}
+  .portada .burger i{display:block;width:2.08cqw;min-width:17px;height:.18cqw;min-height:1.6px;
+    background:#1C2733}
+  @keyframes p-late{0%,55%{opacity:1}56%,100%{opacity:.22}}
+  @media (prefers-reduced-motion:reduce){.portada .estado em{animation:none}}
+  @media (max-width:820px){
+    .portada .stage{aspect-ratio:auto;height:100svh;min-height:560px}
+    .portada .win{left:6%;top:19%;width:88%;height:57%}
+    .portada .bar{height:7.4%;font-size:2.5cqw;gap:2.4cqw;padding:0 3.4cqw}
+    .portada .dots{gap:1.5cqw}
+    .portada .dots i{width:1.5cqw;height:1.5cqw}
+    .portada .estado{gap:1.7cqw}
+    .portada .estado em{width:1.5cqw;height:1.5cqw}
+    .portada .cut{inset:0;width:100%;height:100%;background-size:auto 77%;background-position:64% bottom}
+    .portada .wm span{left:5cqw;bottom:6cqw;font-size:26cqw}
+    .portada .copy{left:5cqw;top:4.5cqw;bottom:auto;max-width:86cqw}
+    .portada .volanta{font-size:3.6cqw;letter-spacing:.14em}
+    .portada .bajada{font-size:3.4cqw;margin-top:2.6cqw}
+    .portada .bajada .l{display:inline;white-space:normal}
+  }
+
+  .navx{ position:fixed; z-index:60; left:0; right:0; top:0; height:68px;
+    background:rgba(241,239,233,.93); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--linea); display:flex; align-items:center; gap:18px;
+    padding:0 var(--gutter); transform:translateY(-110%);
+    transition:transform .3s ease; }
+  .navx.on{ transform:none; }
+  .navx .marca{ font-family:var(--marca); font-weight:700; font-size:18.5px; letter-spacing:-.045em;
+    color:var(--tinta); }
+  .navx .marca u{ display:inline-block; width:.0815em; height:.0763em; background:currentColor;
+    text-decoration:none; position:relative; top:-.626em; margin-left:-.1515em; margin-right:.070em; }
+  .navx .idx{ display:flex; gap:2px; margin-left:6px; }
+  .navx .idx a{ font-family:var(--marca); font-size:15px; font-weight:600; letter-spacing:-.012em;
+    color:var(--tinta-suave); padding:8px 11px; line-height:1; white-space:nowrap;
+    transition:color .15s; }
+  .navx .idx a:hover{ color:var(--tinta); }
+  .navx .idx a.act{ color:var(--senal); }
+  .navx .cta{ margin-left:auto; font-family:var(--marca); font-weight:600; font-size:14.5px;
+    color:var(--profundo); border:1px solid rgba(15,74,85,.45); padding:9px 17px;
+    white-space:nowrap; transition:background .15s,color .15s; }
+  .navx .cta:hover{ background:var(--profundo); color:var(--papel); }
+  @media (max-width:1180px){
+    .navx{ padding-inline:26px; gap:10px; }
+    .navx .idx a{ font-size:13.5px; padding:7px 8px; }
+  }
+  @media (max-width:860px){
+    .navx{ height:54px; }
+    .navx .idx{ display:none; }
+    .navx .cta{ font-size:12.5px; padding:7px 12px; }
+  }
+
+  .indice{ border-top:1px solid var(--linea); border-bottom:1px solid var(--linea);
+    display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); gap:0 14px;
+    padding-top:20px; padding-bottom:22px; }
+  .indice a{ display:flex; flex-direction:column; gap:7px; font-family:var(--marca);
+    font-size:14px; font-weight:600; letter-spacing:-.012em; color:var(--tinta);
+    transition:color .15s; }
+  .indice a .n{ font-size:11px; font-weight:700; letter-spacing:.14em; color:var(--apagado);
+    transition:color .15s; }
+  .indice a:hover{ color:var(--senal); }
+  .indice a:hover .n{ color:var(--senal); }
+  @media (max-width:900px){
+    .indice{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px 14px; padding-bottom:20px; }
+    .indice a{ font-size:13px; }
+  }
+
+  .capa .pend{ display:inline-block; margin-top:8px; font-family:var(--marca); font-size:11px;
+    font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--senal); }
+  .rasgos .fon{ font-weight:700; color:var(--tinta); font-size:1.08em; }
+  .capas .apertura{ margin-left:388px; max-width:620px; margin-bottom:56px;
+    font-size:clamp(16.5px,1.35vw,18.5px); line-height:1.58;
+    color:var(--tinta); letter-spacing:-.004em; text-wrap:pretty; }
+  .capas .cab{ align-items:flex-start; }
+  @media (max-width:900px){
+    .capas .apertura{ margin-left:0; max-width:none; font-size:17px; line-height:1.55;
+      margin-bottom:34px; padding-bottom:34px; border-bottom:1px solid var(--linea); }
+  }
+
+  /* ---- ritmo de fondos: la prueba y la ética sobre el verde ---- */
+  .prueba{ background:var(--profundo); color:var(--papel);
+    border-top:1px solid var(--linea); }
+  .prueba .eyebrow{ color:rgba(241,239,233,.52); }
+  .prueba .lede{ color:rgba(241,239,233,.76); }
+  .prueba .marco{ border-color:rgba(241,239,233,.26); background:rgba(255,255,255,.055); }
+  .prueba .marco .ph{ color:rgba(241,239,233,.45); }
+  .prueba .barra{ background:#E0DDD7; color:#4C5359; border-top-color:rgba(0,0,0,.10); }
+  .prueba .barra .est{ color:#3A4247; }
+  .prueba .barra .meta{ color:#6C7278; }
+  .prueba .barra .sep{ background:rgba(0,0,0,.18); }
+  .prueba .nota-chica{ color:rgba(241,239,233,.58); }
+  .prueba .tira .cuadro{ background:rgba(255,255,255,.055); border-color:rgba(241,239,233,.24); }
+  .prueba .tira .tc{ color:rgba(241,239,233,.52); }
+  .prueba .pie-tira{ border-top-color:rgba(241,239,233,.24); }
+  .prueba .pie-tira .marca-ph{ color:var(--senal); }
+
+</style>
+</head>
+<body>
+<div class="page" id="top">
+
+  <nav class="navx" id="navx">
+    <a class="marca" href="#top">prox&#305;<u></u>ma</a>
+    <div class="idx">
+      <a href="#s01">Qué es</a><a href="#s02">El idioma</a><a href="#s03">La prueba</a><a href="#s04">Lo que se mide</a><a href="#s05">Los datos</a><a href="#s06">Ética</a><a href="#s07">Dónde sirve</a><a href="#s08">Equipo</a>
+    </div>
+    <a class="cta" href="#agendar">Agendá quince minutos</a>
+  </nav>
+
+  <div class="portada">
+    <div class="stage">
+      <div class="bg"></div>
+      <div class="win">
+        <div class="bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="estado"><em></em>Escuchando</span>
+          <span class="reloj" id="p-reloj">02:14</span>
+        </div>
+      </div>
+      <div class="cut"></div>
+      <div class="wm"><span>prox&#305;<u></u>ma</span></div>
+      <div class="copy">
+        <p class="volanta">IA generativa en tiempo real</p>
+        <p class="bajada"><span class="l">Agentes de video que conversan en tiempo real,</span> <span class="l">con cara y voz humanas, en español rioplatense.</span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cue pad">
+    <div class="rule"></div>
+    <span class="eyebrow">01 &nbsp;·&nbsp; Qué es</span>
+  </div>
+
+  <section id="s01" class="capas">
+    <p class="apertura">Construimos agentes de video de IA generativa. Dicho sin vueltas: una persona en pantalla que atiende, escucha y contesta hablando, en tiempo real. No es una persona real ni la filmación de nadie — es una identidad construida, que no existe fuera de esa ventana. Y no reproduce nada grabado: lo que dice, cómo lo dice y lo que hace la cara mientras lo dice se producen mientras la conversación pasa.</p>
+
+    <div class="cab">
+      <div class="izq">
+        <h2 class="tit">Ninguna conversación se repite.</h2>
+      </div>
+    </div>
+
+    <div>
+      <div class="capa">
+        <div class="num">01</div>
+        <div class="nom">No es nadie</div>
+        <p>La cara no se le pidió prestada a nadie. No hay un actor que la haya cedido, ni un contrato de imagen para renegociar, ni alguien que el mes que viene aparezca en la publicidad de otro. Es una identidad construida.</p>
+      </div>
+      <div class="capa">
+        <div class="num">02</div>
+        <div class="nom">Se acuerda</div>
+        <p>La conversación no arranca de cero en cada pregunta: lo que se dijo hace cinco minutos sigue estando cuando llegás a la pregunta doce. Es la diferencia entre conversar y llenar un formulario de a un campo por vez.</p>
+      </div>
+      <div class="capa">
+        <div class="num">03</div>
+        <div class="nom">Improvisa la conversación,<br>no la información</div>
+        <p>Sólo habla de lo que hay en tus fuentes, y cuando algo no está, lo dice en vez de inventarlo. No hay árbol de opciones ni respuestas escritas de antemano: lo que no está guionado es cómo lo dice, no qué dice.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="s02" class="idioma">
+    <div class="cab">
+      <div class="izq">
+        <span class="eyebrow">02 &nbsp;·&nbsp; El idioma</span>
+        <h2 class="tit">Nadie habla en neutro.<br>Tus clientes tampoco.</h2>
+      </div>
+    </div>
+
+    <div class="contraste">
+      <div>
+        <span class="eyebrow rot">Lo que hace la categoría</span>
+        <p>Los agentes que ya están en el mercado nacieron en inglés y agregan el idioma como una línea más en la ficha: treinta y dos idiomas, cuarenta. Y el español figura como una opción única: la misma para Bogotá, para Madrid y para Buenos Aires. La voz pronuncia bien; el ritmo, el turno y la tonada siguen siendo de otro lado.</p>
+      </div>
+      <div>
+        <span class="eyebrow rot">Lo que hacemos</span>
+        <p class="marcado">Tus clientes no necesitan un español de película doblada. Necesitan el suyo.</p>
+      </div>
+    </div>
+
+    <div class="rasgos">
+      <div><h3>Voseo</h3><p>Arrastra la conjugación y el imperativo, que es la forma de pedir. <span class="ej">Fijate, vení, decime.</span></p></div>
+      <div><h3>Melodía</h3><p>La entonación rioplatense no se parece a la de ningún otro español.</p></div>
+      <div><h3>Fonética</h3><p>El rehilamiento de la <span class="fon">ll</span> y la <span class="fon">y</span>: en una sílaba ya sabés de dónde es.</p></div>
+      <div><h3>Tiempo</h3><p>El hueco entre turnos tiene nacionalidad. <span class="ej">Lo estamos midiendo.</span></p></div>
+    </div>
+  </section>
+
+  <section id="s03" class="prueba">
+    <div class="fila">
+      <div class="col-txt">
+        <span class="eyebrow">03 &nbsp;·&nbsp; La prueba</span>
+        <h2 class="tit">No nos creas. Mirala.</h2>
+        <p class="lede">No vas a encontrar acá un botón para hablar con un agente. Todavía no abrimos el acceso público: cuando lo hagamos queremos que sea una conversación en serio y no una demo que se rompe. Mientras tanto, esto es una conversación real, sin editar.</p>
+      </div>
+      <div class="ventana">
+        <div class="marco">
+          <div class="hueco"><span class="ph">[ video — 50 s, una sola toma ]</span></div>
+          <div class="barra">
+            <span class="punto"></span>
+            <span class="est">Escuchando</span>
+            <span class="meta push">02:14</span>
+            <span class="sep"></span>
+            <span class="meta">1x</span>
+            <span class="sep"></span>
+            <span class="meta">una toma, sin cortes</span>
+          </div>
+        </div>
+        <p class="nota-chica">El reloj no se reinicia: si no se reinicia, no hubo corte.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="tira">
+        <div class="celda"><div class="cuadro"></div><div class="tc">00:00</div></div>
+        <div class="celda"><div class="cuadro"></div><div class="tc">00:04</div></div>
+        <div class="celda"><div class="cuadro"></div><div class="tc">00:08</div></div>
+        <div class="celda"><div class="cuadro"></div><div class="tc">00:12</div></div>
+        <div class="celda"><div class="cuadro"></div><div class="tc">00:16</div></div>
+        <div class="celda"><div class="cuadro"></div><div class="tc">00:20</div></div>
+        <div class="celda"><div class="cuadro"></div><div class="tc">00:24</div></div>
+        <div class="celda"><div class="cuadro"></div><div class="tc">00:28</div></div>
+      </div>
+      <div class="pie-tira" style="margin-top:13px;">
+        <p class="afirma">Ocho cuadros consecutivos. El agente no está hablando.</p>
+        <p class="marca-ph">[ cuadros reales del sistema — a reemplazar ]</p>
+      </div>
+    </div>
+
+  </section>
+
+  <section id="s04" class="medir">
+    <div class="cab">
+      <div class="izq">
+        <span class="eyebrow">04 &nbsp;·&nbsp; Lo que se mide</span>
+        <h2 class="tit">Nadie contesta la encuesta.</h2>
+      </div>
+      <p class="lede">La mayoría de la gente no puntúa la atención: corta y sigue con su día. Una conversación en video, en cambio, deja señales medibles mientras pasa.</p>
+    </div>
+
+    <div class="cuatro">
+      <div>
+        <h3>Qué se mide</h3>
+        <p>Señales de la conversación: turnos, interrupciones, repeticiones, largo de los silencios, ritmo y energía de la voz, y la dinámica de la cara.</p>
+      </div>
+      <div>
+        <h3>Qué sale</h3>
+        <p>Un indicador por sesión y un promedio por grupo de clientes: dónde se trabó la conversación, en qué tema, a qué hora.</p>
+      </div>
+      <div>
+        <h3>Qué no se guarda</h3>
+        <p>Ni el video, ni el audio, ni una plantilla de la cara o de la voz. La medición pasa dentro de la sesión; lo que sobrevive es el número, no la persona.</p>
+      </div>
+      <div>
+        <h3>Cómo se declara</h3>
+        <p>Va en el mismo aviso del comienzo, junto con el de que es un agente. Sin aviso no se mide.</p>
+      </div>
+    </div>
+
+    <div class="remate">
+      <p class="frase">No te decimos cómo se siente tu cliente.<br>Te decimos si resolvió lo que vino a hacer.</p>
+      <p>Inferir una emoción desde una cara no es confiable. La calidad del encuentro sí: si hubo que repetir tres veces, si el silencio se estiró, si cortó a mitad de una frase.</p>
+    </div>
+  </section><section id="s05" class="datos">
+    <div class="cab">
+      <div class="izq">
+        <span class="eyebrow">05 &nbsp;·&nbsp; Los datos</span>
+        <h2 class="tit">Los datos se quedan acá.</h2>
+      </div>
+    </div>
+
+    <div class="cuatro">
+      <div>
+        <h3>En qué corre</h3>
+        <p>El modelo corre en hardware de escritorio, no en un rack: puede estar en un equipo adentro de tu edificio, o en infraestructura alojada en Argentina. En los dos casos, dónde están los datos deja de depender de un contrato.</p>
+      </div>
+      <div>
+        <h3>Qué no sale</h3>
+        <p>Ni la cara ni la voz de tu cliente cruzan la frontera. Sacar datos del país es un trámite con requisitos legales; acá no hace falta, porque no salen.</p>
+      </div>
+      <div>
+        <h3>Tu cara no se guarda</h3>
+        <p>No almacenamos biometría de la persona que conversa. Lo que se procesa para sostener la conversación se elimina al terminarla.</p>
+      </div>
+      <div>
+        <h3>Bajo qué jurisdicción</h3>
+        <p>Contrato y ley argentinos. Si algo sale mal se resuelve acá, no en un tribunal de otro país.</p>
+      </div>
+    </div>
+
+    <p class="frase-sola">Un proveedor global puede prometerte cumplimiento.<br>No puede prometerte jurisdicción.</p>
+  </section>
+
+  <section id="s06" class="banda">
+    <div class="fila">
+      <div class="col-txt">
+        <span class="eyebrow">06 &nbsp;·&nbsp; Ética y consentimiento</span>
+        <h2>Lo decimos antes de que lo notes.</h2>
+        
+      </div>
+      <div class="compromisos">
+        <div>
+          <div class="tick"></div>
+          <h3>Se declara al empezar.</h3>
+          <p>El agente dice que es un agente en la primera frase, y lo vuelve a decir si se lo preguntan. Nadie se tiene que dar cuenta solo.</p>
+        </div>
+        <div>
+          <div class="tick"></div>
+          <h3>Ninguna cara sin permiso.</h3>
+          <p>Si un agente usa la cara o la voz de una persona real, esa persona firmó, con alcance y plazo definidos.</p>
+        </div>
+        <div>
+          <div class="tick"></div>
+          <h3>Queda registro de todo.</h3>
+          <p>Cada conversación es auditable de punta a punta por el cliente: qué se dijo, cuándo, y con qué versión del sistema.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+
+  <section id="s07" class="verticales">
+    <div class="cab">
+      <div class="izq">
+        <span class="eyebrow">07 &nbsp;·&nbsp; Dónde sirve</span>
+        <h2 class="tit">Empezamos por tres.</h2>
+      </div>
+      <p class="lede">Una lista larga de sectores sin un solo cliente no dice nada. Estos son los tres que vamos a atender primero.</p>
+    </div>
+    <div class="tres">
+      <div class="tarjeta">
+        <h3>Banca y servicios financieros</h3>
+        <p>Atención, onboarding y educación financiera. Donde no hay sucursal, y a la hora que sea. Es el sector que más agentes de voz desplegó en 2025 <span style="color:var(--apagado)">(Grand View Research, 2026)</span>.</p>
+        <a class="link" href="#">Ver el caso del sector</a>
+      </div>
+      <div class="tarjeta">
+        <h3>Salud</h3>
+        <p>Admisión, turnos y consultas. Un agente en video descomprime la mesa de entrada y atiende a cualquier hora. Y en salud la cara no es un adorno: una indicación dada por alguien que te mira se entiende distinto que un mensaje de texto.</p>
+      </div>
+      <div class="tarjeta">
+        <h3>Servicios públicos</h3>
+        <p>Trámites y consultas de alto volumen: mucha gente preguntando lo mismo, en horario de oficina. Un agente en video atiende a cualquier hora y contesta la consulta número cuatrocientos igual que la primera.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="s08" class="equipo">
+    <div class="cab">
+      <div class="izq">
+        <span class="eyebrow">08 &nbsp;·&nbsp; Equipo</span>
+        <h2 class="tit">Preproducto, el equipo es la prueba.</h2>
+      </div>
+      <p class="lede">Equipo local: en tu zona horaria, en tu idioma, y en la misma ciudad si hace falta.</p>
+    </div>
+    <div class="personas">
+      <div class="persona">
+        <div class="foto"><span class="ph">[ foto ]</span></div>
+        <div class="nom">[nombre]</div>
+        <div class="rol">[rol]</div>
+        <p>[dos líneas de background: qué hizo antes, y por qué eso importa acá.]</p>
+      </div>
+      <div class="persona">
+        <div class="foto"><span class="ph">[ foto ]</span></div>
+        <div class="nom">[nombre]</div>
+        <div class="rol">[rol]</div>
+        <p>[dos líneas de background.]</p>
+      </div>
+      <div class="persona">
+        <div class="foto"><span class="ph">[ foto ]</span></div>
+        <div class="nom">[nombre]</div>
+        <div class="rol">[rol]</div>
+        <p>[dos líneas de background.]</p>
+      </div>
+    </div>
+  </section>
+
+  
+
+  <section class="cierre" id="agendar">
+    <div class="izq">
+      <h2>Agendá quince minutos. La segunda mitad la hablás con el agente.</h2>
+      <p>No hay botón de demo porque un demo a micrófono abierto con un desconocido no prueba nada. Lo hacemos en vivo, con alguien del equipo del otro lado.</p>
+    </div>
+    <div class="form">
+      <div class="par">
+        <div class="campo">Nombre</div>
+        <div class="campo">Organización</div>
+      </div>
+      <div class="campo">Mail</div>
+      <a class="boton" href="#">Reservar</a>
+    </div>
+  </section>
+
+  <div class="pie">
+    <div class="wm">proxima</div>
+    <div class="links">
+      <a href="#">[contacto]</a>
+      <a href="#">Ética y consentimiento</a>
+      </div>
+    <div class="loc">Buenos Aires, Argentina &nbsp;·&nbsp; El retrato de portada es una imagen generada: no corresponde a una persona real.</div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var nav=document.getElementById('navx');
+  if(!nav) return;
+  var links=[].slice.call(nav.querySelectorAll('.idx a'));
+  var secs=links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  var portada=document.querySelector('.portada');
+  function marcar(){
+    var y=window.scrollY||document.documentElement.scrollTop;
+    var lim=(portada?portada.getBoundingClientRect().height:600)-70;
+    nav.classList.toggle('on', y>lim);
+    var act=-1;
+    for(var i=0;i<secs.length;i++){
+      if(secs[i] && secs[i].getBoundingClientRect().top<=90) act=i;
+    }
+    links.forEach(function(a,i){ a.classList.toggle('act', i===act); });
+  }
+  links.concat([].slice.call(nav.querySelectorAll('.marca,.cta'))).forEach(function(a){
+    a.addEventListener('click', function(e){
+      var d=document.querySelector(a.getAttribute('href'));
+      if(!d) return; e.preventDefault();
+      window.scrollTo({top: (a.getAttribute('href')==='#top'?0:d.getBoundingClientRect().top+window.scrollY-54), behavior:'smooth'});
+    });
+  });
+  window.addEventListener('scroll', marcar, {passive:true});
+  window.addEventListener('resize', marcar);
+  marcar();
+})();
+</script>
+<script>
+(function(){
+  var r=document.getElementById('p-reloj'); if(!r) return; var s=134;
+  setInterval(function(){ s++;
+    r.textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+  },1000);
+})();
+</script>
+</body>
+</html>
