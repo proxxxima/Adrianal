@@ -1,0 +1,6 @@
+Poné acá dos archivos y el video aparece solo:
+
+  demo.mp4          el video (H.264 + AAC, 1056x608)
+  demo-poster.jpg   un cuadro del video como imagen de portada
+
+Si no están, la página muestra el placeholder y no se rompe nada.
