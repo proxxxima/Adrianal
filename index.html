@@ -268,7 +268,7 @@
 @font-face{font-family:'Arimo';font-style:normal;font-weight:400;font-display:swap;src:url(assets/f-bf8e7a2421.woff2) format('woff2')}
 @font-face{font-family:'Arimo';font-style:normal;font-weight:500;font-display:swap;src:url(assets/f-9670a4d340.woff2) format('woff2')}
   .portada{
-    --p-bg:url(assets/img-845c87c478.webp); --p-cut:url(assets/img-4153499d29.webp);
+    --p-bg:url(assets/img-845c87c478.webp); --p-cut:url(assets/img-1f95e5f219.webp);
     --p-crema:#E0DDD7; --p-crema-ink:#4C5359; --p-key:#E8481F;
     --p-sans:"Helvetica Neue",Helvetica,"Arimo",Arial,sans-serif;
     background:#0E1114;
@@ -294,8 +294,8 @@
   .portada .wm span{position:absolute;left:3.60cqw;bottom:4.02cqw;color:#FDFDFC;
     font-size:25.5cqw;font-weight:400;line-height:1;letter-spacing:-.055em;white-space:nowrap;
     user-select:none}
-  .portada .wm u{display:inline-block;width:.0815em;height:.0763em;background:currentColor;
-    text-decoration:none;position:relative;top:-.626em;margin-left:-.1515em;margin-right:.070em}
+  .portada .wm u{display:inline-block;width:.0872em;height:.0763em;background:currentColor;
+    text-decoration:none;position:relative;top:-.626em;margin-left:-.1297em;margin-right:.0425em}
   .portada .copy{position:absolute;z-index:6;left:5.28cqw;bottom:31.6cqw}
   .portada .volanta{font-size:clamp(15.5px,1.25cqw,18px);font-weight:500;letter-spacing:.16em;text-transform:uppercase;
     color:#C4CCD1;margin:0}
@@ -355,7 +355,7 @@
   }
 
   .indice{ border-top:1px solid var(--linea); border-bottom:1px solid var(--linea);
-    display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); gap:0 14px;
+    display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:0 14px;
     padding-top:20px; padding-bottom:22px; }
   .indice a{ display:flex; flex-direction:column; gap:7px; font-family:var(--marca);
     font-size:14px; font-weight:600; letter-spacing:-.012em; color:var(--tinta);
@@ -371,14 +371,17 @@
 
   .capa .pend{ display:inline-block; margin-top:8px; font-family:var(--marca); font-size:11px;
     font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--senal); }
+  .datos .cuatro{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .prueba .hueco{ position:relative; }
+  .prueba .hueco .ph{ position:absolute; inset:0; display:flex; align-items:center;
+    justify-content:center; z-index:0; }
+  .prueba .hueco .demo{ position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; display:block; background:#0E1114; z-index:1; }
   .rasgos .fon{ font-weight:700; color:var(--tinta); font-size:1.08em; }
-  .capas .apertura{ margin-left:388px; max-width:620px; margin-bottom:56px;
-    font-size:clamp(16.5px,1.35vw,18.5px); line-height:1.58;
-    color:var(--tinta); letter-spacing:-.004em; text-wrap:pretty; }
   .capas .cab{ align-items:flex-start; }
+  .capas{ padding-bottom:54px; }
+  @media (max-width:900px){ .capas{ padding-bottom:40px; } }
   @media (max-width:900px){
-    .capas .apertura{ margin-left:0; max-width:none; font-size:17px; line-height:1.55;
-      margin-bottom:34px; padding-bottom:34px; border-bottom:1px solid var(--linea); }
   }
 
   /* ---- ritmo de fondos: la prueba y la ética sobre el verde ---- */
@@ -404,11 +407,10 @@
 <div class="page" id="top">
 
   <nav class="navx" id="navx">
-    <a class="marca" href="#top">prox&#305;<u></u>ma</a>
+    <a class="marca" href="#top">pr&oacute;x&#305;<u></u>ma</a>
     <div class="idx">
-      <a href="#s01">Qué es</a><a href="#s02">El idioma</a><a href="#s03">La prueba</a><a href="#s04">Lo que se mide</a><a href="#s05">Los datos</a><a href="#s06">Ética</a><a href="#s07">Dónde sirve</a><a href="#s08">Equipo</a>
+      <a href="#s01">Qué es</a><a href="#s02">El idioma</a><a href="#s03">La prueba</a><a href="#s04">Lo que se mide</a><a href="#s05">Los datos</a><a href="#s06">Equipo</a>
     </div>
-    <a class="cta" href="#agendar">Agendá quince minutos</a>
   </nav>
 
   <div class="portada">
@@ -422,7 +424,7 @@
         </div>
       </div>
       <div class="cut"></div>
-      <div class="wm"><span>prox&#305;<u></u>ma</span></div>
+      <div class="wm"><span>pr&oacute;x&#305;<u></u>ma</span></div>
       <div class="copy">
         <p class="volanta">IA generativa en tiempo real</p>
         <p class="bajada"><span class="l">Agentes de video que conversan en tiempo real,</span> <span class="l">con cara y voz humanas, en español rioplatense.</span></p>
@@ -436,8 +438,6 @@
   </div>
 
   <section id="s01" class="capas">
-    <p class="apertura">Construimos agentes de video de IA generativa. Dicho sin vueltas: una persona en pantalla que atiende, escucha y contesta hablando, en tiempo real. No es una persona real ni la filmación de nadie — es una identidad construida, que no existe fuera de esa ventana. Y no reproduce nada grabado: lo que dice, cómo lo dice y lo que hace la cara mientras lo dice se producen mientras la conversación pasa.</p>
-
     <div class="cab">
       <div class="izq">
         <h2 class="tit">Ninguna conversación se repite.</h2>
@@ -447,18 +447,23 @@
     <div>
       <div class="capa">
         <div class="num">01</div>
-        <div class="nom">No es nadie</div>
-        <p>La cara no se le pidió prestada a nadie. No hay un actor que la haya cedido, ni un contrato de imagen para renegociar, ni alguien que el mes que viene aparezca en la publicidad de otro. Es una identidad construida.</p>
+        <div class="nom">La arma quien pregunta</div>
+        <p>Lo que se dice surge de lo que el usuario trajo. Cómo preguntó, qué le importa, qué entendió y qué no. Dos personas con la misma duda no tienen la misma conversación.</p>
       </div>
       <div class="capa">
         <div class="num">02</div>
         <div class="nom">Se acuerda</div>
-        <p>La conversación no arranca de cero en cada pregunta: lo que se dijo hace cinco minutos sigue estando cuando llegás a la pregunta doce. Es la diferencia entre conversar y llenar un formulario de a un campo por vez.</p>
+        <p>La conversación no arranca de cero en cada pregunta. Lo que se dijo hace cinco minutos sigue estando cuando tu cliente llega a la pregunta doce, y se puede retomar sin repetirlo. Es la diferencia entre una conversación real y volver al menú principal de un chat una y otra vez.</p>
       </div>
       <div class="capa">
         <div class="num">03</div>
-        <div class="nom">Improvisa la conversación,<br>no la información</div>
-        <p>Sólo habla de lo que hay en tus fuentes, y cuando algo no está, lo dice en vez de inventarlo. No hay árbol de opciones ni respuestas escritas de antemano: lo que no está guionado es cómo lo dice, no qué dice.</p>
+        <div class="nom">Se actualiza sin nosotros</div>
+        <p>El día que cambia un dato o un procedimiento en tu negocio, lo actualizás donde ya lo tenés —el documento, la tabla, el sistema— y el agente lo dice desde ese momento. No hay que volver a filmar, ni reescribir un árbol de respuestas, ni abrirnos un ticket y esperar dos semanas.</p>
+      </div>
+      <div class="capa">
+        <div class="num">04</div>
+        <div class="nom">Es una identidad construida</div>
+        <p>La cara no se le pidió prestada a nadie. No hay un actor que la haya cedido, ni un contrato de imagen para renegociar, ni alguien que el mes que viene aparezca en la publicidad de otro.</p>
       </div>
     </div>
   </section>
@@ -495,11 +500,11 @@
       <div class="col-txt">
         <span class="eyebrow">03 &nbsp;·&nbsp; La prueba</span>
         <h2 class="tit">No nos creas. Mirala.</h2>
-        <p class="lede">No vas a encontrar acá un botón para hablar con un agente. Todavía no abrimos el acceso público: cuando lo hagamos queremos que sea una conversación en serio y no una demo que se rompe. Mientras tanto, esto es una conversación real, sin editar.</p>
+        <p class="lede">No vas a encontrar acá un botón para hablar con un agente. Todavía no abrimos el acceso público: cuando lo hagamos queremos que sea una conversación en serio y no una demo que se rompe.</p>
       </div>
       <div class="ventana">
         <div class="marco">
-          <div class="hueco"><span class="ph">[ video — 50 s, una sola toma ]</span></div>
+          <div class="hueco"><video class="demo" id="demo" playsinline preload="metadata" controls poster="assets/demo-poster.jpg"><source src="assets/demo.mp4" type="video/mp4"></video><span class="ph">[ video — 50 s, una sola toma ]</span></div>
           <div class="barra">
             <span class="punto"></span>
             <span class="est">Escuchando</span>
@@ -514,22 +519,7 @@
       </div>
     </div>
 
-    <div>
-      <div class="tira">
-        <div class="celda"><div class="cuadro"></div><div class="tc">00:00</div></div>
-        <div class="celda"><div class="cuadro"></div><div class="tc">00:04</div></div>
-        <div class="celda"><div class="cuadro"></div><div class="tc">00:08</div></div>
-        <div class="celda"><div class="cuadro"></div><div class="tc">00:12</div></div>
-        <div class="celda"><div class="cuadro"></div><div class="tc">00:16</div></div>
-        <div class="celda"><div class="cuadro"></div><div class="tc">00:20</div></div>
-        <div class="celda"><div class="cuadro"></div><div class="tc">00:24</div></div>
-        <div class="celda"><div class="cuadro"></div><div class="tc">00:28</div></div>
-      </div>
-      <div class="pie-tira" style="margin-top:13px;">
-        <p class="afirma">Ocho cuadros consecutivos. El agente no está hablando.</p>
-        <p class="marca-ph">[ cuadros reales del sistema — a reemplazar ]</p>
-      </div>
-    </div>
+    
 
   </section>
 
@@ -545,11 +535,11 @@
     <div class="cuatro">
       <div>
         <h3>Qué se mide</h3>
-        <p>Señales de la conversación: turnos, interrupciones, repeticiones, largo de los silencios, ritmo y energía de la voz, y la dinámica de la cara.</p>
+        <p>Señales de la conversación: turnos, interrupciones, repeticiones, largo de los silencios, y el ritmo de la voz.</p>
       </div>
       <div>
         <h3>Qué sale</h3>
-        <p>Un indicador por sesión y un promedio por grupo de clientes: dónde se trabó la conversación, en qué tema, a qué hora.</p>
+        <p>Un indicador por sesión y un promedio por grupo de clientes: dónde se trabó la conversación, en qué tema y cuántas veces volvió a pasar.</p>
       </div>
       <div>
         <h3>Qué no se guarda</h3>
@@ -574,16 +564,13 @@
     </div>
 
     <div class="cuatro">
-      <div>
-        <h3>En qué corre</h3>
-        <p>El modelo corre en hardware de escritorio, no en un rack: puede estar en un equipo adentro de tu edificio, o en infraestructura alojada en Argentina. En los dos casos, dónde están los datos deja de depender de un contrato.</p>
-      </div>
+      
       <div>
         <h3>Qué no sale</h3>
         <p>Ni la cara ni la voz de tu cliente cruzan la frontera. Sacar datos del país es un trámite con requisitos legales; acá no hace falta, porque no salen.</p>
       </div>
       <div>
-        <h3>Tu cara no se guarda</h3>
+        <h3>Ninguna cara se guarda</h3>
         <p>No almacenamos biometría de la persona que conversa. Lo que se procesa para sostener la conversación se elimina al terminarla.</p>
       </div>
       <div>
@@ -595,112 +582,45 @@
     <p class="frase-sola">Un proveedor global puede prometerte cumplimiento.<br>No puede prometerte jurisdicción.</p>
   </section>
 
-  <section id="s06" class="banda">
-    <div class="fila">
-      <div class="col-txt">
-        <span class="eyebrow">06 &nbsp;·&nbsp; Ética y consentimiento</span>
-        <h2>Lo decimos antes de que lo notes.</h2>
-        
-      </div>
-      <div class="compromisos">
-        <div>
-          <div class="tick"></div>
-          <h3>Se declara al empezar.</h3>
-          <p>El agente dice que es un agente en la primera frase, y lo vuelve a decir si se lo preguntan. Nadie se tiene que dar cuenta solo.</p>
-        </div>
-        <div>
-          <div class="tick"></div>
-          <h3>Ninguna cara sin permiso.</h3>
-          <p>Si un agente usa la cara o la voz de una persona real, esa persona firmó, con alcance y plazo definidos.</p>
-        </div>
-        <div>
-          <div class="tick"></div>
-          <h3>Queda registro de todo.</h3>
-          <p>Cada conversación es auditable de punta a punta por el cliente: qué se dijo, cuándo, y con qué versión del sistema.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  
 
   
 
-  <section id="s07" class="verticales">
-    <div class="cab">
-      <div class="izq">
-        <span class="eyebrow">07 &nbsp;·&nbsp; Dónde sirve</span>
-        <h2 class="tit">Empezamos por tres.</h2>
-      </div>
-      <p class="lede">Una lista larga de sectores sin un solo cliente no dice nada. Estos son los tres que vamos a atender primero.</p>
-    </div>
-    <div class="tres">
-      <div class="tarjeta">
-        <h3>Banca y servicios financieros</h3>
-        <p>Atención, onboarding y educación financiera. Donde no hay sucursal, y a la hora que sea. Es el sector que más agentes de voz desplegó en 2025 <span style="color:var(--apagado)">(Grand View Research, 2026)</span>.</p>
-        <a class="link" href="#">Ver el caso del sector</a>
-      </div>
-      <div class="tarjeta">
-        <h3>Salud</h3>
-        <p>Admisión, turnos y consultas. Un agente en video descomprime la mesa de entrada y atiende a cualquier hora. Y en salud la cara no es un adorno: una indicación dada por alguien que te mira se entiende distinto que un mensaje de texto.</p>
-      </div>
-      <div class="tarjeta">
-        <h3>Servicios públicos</h3>
-        <p>Trámites y consultas de alto volumen: mucha gente preguntando lo mismo, en horario de oficina. Un agente en video atiende a cualquier hora y contesta la consulta número cuatrocientos igual que la primera.</p>
-      </div>
-    </div>
-  </section>
+  
 
-  <section id="s08" class="equipo">
+  <section id="s06" class="equipo">
     <div class="cab">
       <div class="izq">
-        <span class="eyebrow">08 &nbsp;·&nbsp; Equipo</span>
+        <span class="eyebrow">06 &nbsp;·&nbsp; Equipo</span>
         <h2 class="tit">Preproducto, el equipo es la prueba.</h2>
       </div>
       <p class="lede">Equipo local: en tu zona horaria, en tu idioma, y en la misma ciudad si hace falta.</p>
     </div>
-    <div class="personas">
+        <div class="personas">
       <div class="persona">
-        <div class="foto"><span class="ph">[ foto ]</span></div>
-        <div class="nom">[nombre]</div>
-        <div class="rol">[rol]</div>
-        <p>[dos líneas de background: qué hizo antes, y por qué eso importa acá.]</p>
+        <div class="foto" style="background:url(assets/img-9f6895af14.webp) center/cover no-repeat"></div>
+        <div class="nom">Fernando Hashiba</div>
+        <div class="rol">Ingeniería</div>
+        <p>Director de fotografía y desarrollador de machine learning en entornos de high performance computing. Este producto es un problema de imagen y uno de cómputo al mismo tiempo, y es raro que las dos cosas estén en la misma persona.</p>
       </div>
       <div class="persona">
-        <div class="foto"><span class="ph">[ foto ]</span></div>
-        <div class="nom">[nombre]</div>
-        <div class="rol">[rol]</div>
-        <p>[dos líneas de background.]</p>
-      </div>
-      <div class="persona">
-        <div class="foto"><span class="ph">[ foto ]</span></div>
-        <div class="nom">[nombre]</div>
-        <div class="rol">[rol]</div>
-        <p>[dos líneas de background.]</p>
+        <div class="foto" style="background:url(assets/img-51c1440c6b.webp) center/cover no-repeat"></div>
+        <div class="nom">Ignacio Fernández Albano</div>
+        <div class="rol">Producto</div>
+        <p>Viene de la publicidad. Aprendió a trabajar sobre negocios que no eran suyos y a que le voltearan la mitad de lo que proponía. Las dos cosas sirven más de lo que parece cuando el producto todavía se está definiendo.</p>
       </div>
     </div>
   </section>
 
   
 
-  <section class="cierre" id="agendar">
-    <div class="izq">
-      <h2>Agendá quince minutos. La segunda mitad la hablás con el agente.</h2>
-      <p>No hay botón de demo porque un demo a micrófono abierto con un desconocido no prueba nada. Lo hacemos en vivo, con alguien del equipo del otro lado.</p>
-    </div>
-    <div class="form">
-      <div class="par">
-        <div class="campo">Nombre</div>
-        <div class="campo">Organización</div>
-      </div>
-      <div class="campo">Mail</div>
-      <a class="boton" href="#">Reservar</a>
-    </div>
-  </section>
+  
 
   <div class="pie">
-    <div class="wm">proxima</div>
+    <div class="wm">pr&oacute;xima</div>
     <div class="links">
       <a href="#">[contacto]</a>
-      <a href="#">Ética y consentimiento</a>
+      <a href="#">Ética</a>
       </div>
     <div class="loc">Buenos Aires, Argentina &nbsp;·&nbsp; El retrato de portada es una imagen generada: no corresponde a una persona real.</div>
   </div>
@@ -734,6 +654,15 @@
   window.addEventListener('scroll', marcar, {passive:true});
   window.addEventListener('resize', marcar);
   marcar();
+})();
+</script>
+<script>
+(function(){
+  var v=document.getElementById('demo'); if(!v) return;
+  function fuera(){ v.style.display='none'; }
+  v.addEventListener('error', fuera, true);
+  var s=v.querySelector('source'); if(s) s.addEventListener('error', fuera);
+  v.addEventListener('loadedmetadata', function(){ v.style.display='block'; });
 })();
 </script>
 <script>
